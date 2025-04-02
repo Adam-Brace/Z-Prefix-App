@@ -1,17 +1,18 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
+import {
+	AppBar,
+	Box,
+	Toolbar,
+	IconButton,
+	Menu,
+	Container,
+	Typography,
+	Button,
+	Tooltip,
+	MenuItem,
+} from "@mui/material";
+import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext";
 
@@ -72,14 +73,14 @@ export default function ResponsiveAppBar() {
 							aria-label="account of current user"
 							aria-controls="menu-appbar"
 							aria-haspopup="true"
-							onClick={handleOpenNavMenu()}
+							onClick={handleOpenNavMenu}
 							color="inherit"
 						>
 							<MenuIcon />
 						</IconButton>
 						<Menu
 							id="menu-appbar"
-							anchorEl={anchorElNav()}
+							anchorEl={anchorElNav}
 							anchorOrigin={{
 								vertical: "bottom",
 								horizontal: "left",
@@ -89,8 +90,8 @@ export default function ResponsiveAppBar() {
 								vertical: "top",
 								horizontal: "left",
 							}}
-							open={Boolean(anchorElNav())}
-							onClose={handleCloseNavMenu()}
+							open={Boolean(anchorElNav)}
+							onClose={handleCloseNavMenu}
 							sx={{ display: { xs: "block", md: "none" } }}
 						>
 							{pages.map((page) => (
@@ -102,7 +103,7 @@ export default function ResponsiveAppBar() {
 										color: "inherit",
 									}}
 								>
-									<MenuItem onClick={handleCloseNavMenu()}>
+									<MenuItem onClick={handleCloseNavMenu}>
 										<Typography
 											sx={{ textAlign: "center" }}
 										>
@@ -141,7 +142,7 @@ export default function ResponsiveAppBar() {
 						{pages.map((page) => (
 							<Link to={page[1]} key={page[0]}>
 								<Button
-									onClick={handleCloseNavMenu()}
+									onClick={handleCloseNavMenu}
 									sx={{
 										my: 2,
 										color: "white",
@@ -162,19 +163,16 @@ export default function ResponsiveAppBar() {
 							}
 						>
 							<IconButton
-								onClick={handleOpenUserMenu()}
+								onClick={handleOpenUserMenu}
 								sx={{ p: 0 }}
 							>
-								<AccountCircleIcon
-									fontSize="large"
-									alt="User"
-								/>
+								<AccountCircle fontSize="large" alt="User" />
 							</IconButton>
 						</Tooltip>
 						<Menu
 							sx={{ mt: "45px" }}
 							id="menu-appbar"
-							anchorEl={anchorElUser()}
+							anchorEl={anchorElUser}
 							anchorOrigin={{
 								vertical: "top",
 								horizontal: "right",
@@ -184,14 +182,14 @@ export default function ResponsiveAppBar() {
 								vertical: "top",
 								horizontal: "right",
 							}}
-							open={Boolean(anchorElUser())}
-							onClose={handleCloseUserMenu()}
+							open={Boolean(anchorElUser)}
+							onClose={handleCloseUserMenu}
 						>
 							{settings.map((setting) => (
 								<MenuItem
 									key={setting}
 									onClick={() => {
-										handleCloseUserMenu();
+										handleCloseUserMenu;
 										logout();
 									}}
 								>

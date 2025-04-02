@@ -19,6 +19,13 @@ export default function Login() {
 		firstName: "",
 		lastName: "",
 	});
+	const [errors, setErrors] = useState({
+		username: false,
+		password: false,
+		rPassword: false,
+		firstName: false,
+		lastName: false,
+	});
 	const [passwordError, setPasswordError] = useState(false);
 
 	const navigate = useNavigate();
@@ -27,9 +34,29 @@ export default function Login() {
 	const handleChange = (event) => {
 		const { name, value } = event.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
+		setErrors((prev) => ({ ...prev, [name]: value.trim() === "" }));
+
 		if (name === "password" || name === "rPassword") {
 			setPasswordError(
-				formData.password !== value && name === "rPassword"
+				name === "rPassword" && formData.password !== value
+			);
+		}
+	};
+
+	// Adjusted isFormValid to handle login and account creation separately
+	const isFormValid = () => {
+		if (createAccount) {
+			return (
+				Object.values(errors).every((error) => !error) &&
+				Object.values(formData).every((val) => val.trim() !== "") &&
+				!passwordError
+			);
+		} else {
+			// For login, we just need the username and password to be valid
+			return (
+				Object.values(errors).every((error) => !error) &&
+				formData.username.trim() !== "" &&
+				formData.password.trim() !== ""
 			);
 		}
 	};
@@ -37,12 +64,9 @@ export default function Login() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		if (createAccount) {
-			if (passwordError) {
-				alert("Passwords do not match");
-				return;
-			}
+		if (!isFormValid()) return;
 
+		if (createAccount) {
 			const userData = {
 				username: formData.username,
 				password: formData.password,
@@ -122,6 +146,10 @@ export default function Login() {
 						value={formData.username}
 						onChange={handleChange}
 						margin="normal"
+						error={errors.username}
+						helperText={
+							errors.username ? "Username is required" : ""
+						}
 					/>
 					<TextField
 						fullWidth
@@ -134,6 +162,10 @@ export default function Login() {
 						value={formData.password}
 						onChange={handleChange}
 						margin="normal"
+						error={errors.password}
+						helperText={
+							errors.password ? "Password is required" : ""
+						}
 					/>
 
 					{createAccount && (
@@ -149,10 +181,12 @@ export default function Login() {
 								value={formData.rPassword}
 								onChange={handleChange}
 								margin="normal"
-								error={passwordError}
+								error={passwordError || errors.rPassword}
 								helperText={
 									passwordError
 										? "Passwords do not match"
+										: errors.rPassword
+										? "Re-entering the password is required"
 										: ""
 								}
 							/>
@@ -166,6 +200,12 @@ export default function Login() {
 								value={formData.firstName}
 								onChange={handleChange}
 								margin="normal"
+								error={errors.firstName}
+								helperText={
+									errors.firstName
+										? "First name is required"
+										: ""
+								}
 							/>
 							<TextField
 								fullWidth
@@ -177,6 +217,12 @@ export default function Login() {
 								value={formData.lastName}
 								onChange={handleChange}
 								margin="normal"
+								error={errors.lastName}
+								helperText={
+									errors.lastName
+										? "Last name is required"
+										: ""
+								}
 							/>
 						</>
 					)}
@@ -186,7 +232,7 @@ export default function Login() {
 						type="submit"
 						variant="contained"
 						sx={{ mt: 2 }}
-						disabled={createAccount && passwordError}
+						disabled={!isFormValid()}
 					>
 						{createAccount ? "Create Account" : "Login"}
 					</Button>

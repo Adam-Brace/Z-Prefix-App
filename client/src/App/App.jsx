@@ -1,8 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../Home/Home";
+import Home from "../Routes/Home";
 import Nav from "../Components/Nav";
+import Editor from "../Routes/Editor";
+import Login from "../Routes/Login";
 import "./App.css";
-import Login from "../Auth/Login";
 
 function App() {
 	return (
@@ -11,6 +12,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/editor/:itemId" element={<Editor />} />
 			</Routes>
 		</>
 	);
