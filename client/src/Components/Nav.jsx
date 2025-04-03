@@ -16,7 +16,11 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext";
 
-const pages = [["Home", "/"]];
+const pages = [
+	["Home", "/"],
+	["My Items", "/user/items"],
+	["Add Item", "/editor/0"],
+];
 const settings = ["Logout"];
 
 export default function ResponsiveAppBar() {
@@ -94,24 +98,31 @@ export default function ResponsiveAppBar() {
 							onClose={handleCloseNavMenu}
 							sx={{ display: { xs: "block", md: "none" } }}
 						>
-							{pages.map((page) => (
-								<Link
-									to={page[1]}
-									key={page[0]}
-									style={{
-										textDecoration: "none",
-										color: "inherit",
-									}}
-								>
-									<MenuItem onClick={handleCloseNavMenu}>
-										<Typography
-											sx={{ textAlign: "center" }}
+							{pages.map((page) => {
+								if (page[0] === "Home" || user) {
+									return (
+										<Link
+											to={page[1]}
+											key={page[0]}
+											style={{
+												textDecoration: "none",
+												color: "inherit",
+											}}
 										>
-											{page[0]}
-										</Typography>
-									</MenuItem>
-								</Link>
-							))}
+											<MenuItem
+												onClick={handleCloseNavMenu}
+											>
+												<Typography
+													sx={{ textAlign: "center" }}
+												>
+													{page[0]}
+												</Typography>
+											</MenuItem>
+										</Link>
+									);
+								}
+								return null; // Skip rendering if the condition is not met
+							})}
 						</Menu>
 					</Box>
 
@@ -139,20 +150,31 @@ export default function ResponsiveAppBar() {
 							display: { xs: "none", md: "flex" },
 						}}
 					>
-						{pages.map((page) => (
-							<Link to={page[1]} key={page[0]}>
-								<Button
-									onClick={handleCloseNavMenu}
-									sx={{
-										my: 2,
-										color: "white",
-										display: "block",
-									}}
-								>
-									{page[0]}
-								</Button>
-							</Link>
-						))}
+						{pages.map((page) => {
+							if (page[0] === "Home" || user) {
+								return (
+									<Link
+										to={page[1]}
+										key={page[0]}
+										style={{
+											textDecoration: "none",
+											color: "inherit",
+										}}
+									>
+										<Button
+											onClick={handleCloseNavMenu}
+											sx={{
+												my: 2,
+												color: "white",
+												display: "block",
+											}}
+										>
+											{page[0]}
+										</Button>
+									</Link>
+								);
+							}
+						})}
 					</Box>
 					<Box sx={{ flexGrow: 0 }}>
 						<Tooltip
@@ -189,7 +211,7 @@ export default function ResponsiveAppBar() {
 								<MenuItem
 									key={setting}
 									onClick={() => {
-										handleCloseUserMenu;
+										handleCloseUserMenu();
 										logout();
 									}}
 								>

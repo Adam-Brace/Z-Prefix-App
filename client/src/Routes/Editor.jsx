@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../Auth/AuthContext";
 
 export default function Editor() {
+	const { user } = useAuth();
 	const { itemId } = useParams();
-	const [item, setItem] = useState(null);
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		itemName: "",
 		description: "",
@@ -22,7 +24,6 @@ export default function Editor() {
 				.then((res) => res.json())
 				.then((json) => {
 					const itemData = json[0];
-					setItem(itemData);
 					setFormData({
 						itemName: itemData.itemName || "",
 						description: itemData.description || "",
@@ -39,15 +40,69 @@ export default function Editor() {
 		setError((prev) => ({ ...prev, [name]: value.trim() === "" }));
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
+
 		if (
 			Object.values(error).some((err) => err) ||
-			Object.values(formData).some((val) => val.trim() === "")
+			Object.values(formData).some(
+				(val) => typeof val === "string" && val.trim() === ""
+			)
 		) {
 			return;
 		}
-		// TODO: API call for saving form data
+
+		try {
+			if (itemId == 0) {
+				formData.userId = user.id;
+				const response = await fetch("http://localhost:3001/item", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(formData),
+				});
+				if (!response.ok) {
+					throw new Error("Failed to create item");
+				}
+			} else {
+				const response = await fetch(
+					`http://localhost:3001/item/${itemId}`,
+					{
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(formData),
+					}
+				);
+				if (!response.ok) {
+					throw new Error("Failed to update item");
+				}
+			}
+			navigate(`/user/items`);
+		} catch (error) {
+			console.error(error);
+			alert("An error occurred while saving the item.");
+		}
+	};
+
+	const handleDelete = async () => {
+		try {
+			const response = await fetch(
+				`http://localhost:3001/item/${itemId}`,
+				{
+					method: "DELETE",
+				}
+			);
+			if (!response.ok) {
+				throw new Error("Failed to delete item");
+			}
+			navigate(`/user/items`);
+		} catch (error) {
+			console.error(error);
+			alert("An error occurred while deleting the item.");
+		}
 	};
 
 	return (
@@ -128,7 +183,11 @@ export default function Editor() {
 					{itemId == 0 ? "Save Item" : "Save Changes"}
 				</Button>
 				{itemId > 0 && (
-					<Button variant="contained" color="error">
+					<Button
+						variant="contained"
+						color="error"
+						onClick={handleDelete}
+					>
 						Delete Item
 					</Button>
 				)}

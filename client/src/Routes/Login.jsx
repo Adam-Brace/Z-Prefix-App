@@ -117,7 +117,7 @@ export default function Login() {
 				if (response.ok) {
 					console.log("User logged in:", data);
 					login(data.user);
-					navigate(`/`);
+					navigate(`/user/items`);
 				} else {
 					alert(`Error: ${data.error}`);
 				}

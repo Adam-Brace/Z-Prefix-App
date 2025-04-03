@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Card, CardContent, Typography, Fab, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router";
+import { useAuth } from "../Auth/AuthContext";
 
 export default function ItemCard({ item }) {
 	const [disc, setDisc] = useState(false);
+	const { user } = useAuth();
 	const navigate = useNavigate();
+
 	return (
 		<Card
 			sx={{
@@ -49,20 +52,22 @@ export default function ItemCard({ item }) {
 					justifyContent: "flex-end",
 				}}
 			>
-				<Fab
-					color="secondary"
-					aria-label="edit"
-					sx={{
-						alignSelf: "flex-end", // Pushes Fab to the bottom-right
-						marginTop: "auto", // Forces it down
-					}}
-					onClick={(e) => {
-						e.stopPropagation();
-						navigate(`/editor/${item.id}`);
-					}}
-				>
-					<EditIcon />
-				</Fab>
+				{user && user.id === item.userId && (
+					<Fab
+						color="secondary"
+						aria-label="edit"
+						sx={{
+							alignSelf: "flex-end",
+							marginTop: "auto",
+						}}
+						onClick={(e) => {
+							e.stopPropagation();
+							navigate(`/editor/${item.id}`);
+						}}
+					>
+						<EditIcon />
+					</Fab>
+				)}
 			</Box>
 		</Card>
 	);
