@@ -73,7 +73,7 @@ Exit the PostgreSQL shell:
 
 ## Seeding
 
-Run the following commands inside the project directory after starting the project:
+Run the following commands inside the project directory after starting the project and creating the database:
 
 ```sh
 npx knex migrate:rollback
