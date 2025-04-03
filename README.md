@@ -76,7 +76,7 @@ Exit the PostgreSQL shell:
 Run the following commands inside the project directory after starting the project:
 
 ```sh
-npx knex migrate:rollback --env production
-npx knex migrate:latest --env production
-npx knex seed:run --env production
+npx knex migrate:rollback
+npx knex migrate:latest
+npx knex seed:run
 ```
