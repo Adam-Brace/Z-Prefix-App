@@ -239,7 +239,7 @@ export default function Login() {
 
 					<Button
 						fullWidth
-						color="secondary"
+						color="white"
 						onClick={() => setCreateAccount((prev) => !prev)}
 						sx={{ mt: 1 }}
 					>

@@ -213,6 +213,7 @@ export default function ResponsiveAppBar() {
 									onClick={() => {
 										handleCloseUserMenu();
 										logout();
+										navigate("/");
 									}}
 								>
 									<Typography sx={{ textAlign: "center" }}>
